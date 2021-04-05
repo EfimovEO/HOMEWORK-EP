@@ -15,14 +15,17 @@ def check(lst, sub):
            return True
    return False
 
-args_list=sys.argv
-args_list.pop(0)
-x = input("Please, input some word or phrase: ")
-y=x.split(' ')
-while True:
-    if check(args_list, y):
-        print("You have provided one of argument phrases.")
-        break
-    else:
-        x = input("Please, input some word or phrase one more time: ")
-        y=x.split(' ')
+def list_or_phrases():
+    args_list=sys.argv
+    args_list.pop(0)
+    x = input("Please, input some word or phrase: ")
+    y=x.split(' ')
+    while True:
+        if check(args_list, y):
+            print("You have provided one of argument phrases.")
+            return
+        else:
+            x = input("Please, input some word or phrase one more time: ")
+            y=x.split(' ')
+
+list_or_phrases()
