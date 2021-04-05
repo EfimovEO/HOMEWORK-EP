@@ -9,21 +9,25 @@ Don't forget to add a check of the passed argument type.
 
 import sys
 
-try:
-    x=sys.argv[1]
-except IndexError:
-    print("Numbers list wasn't given as an argument to the script {}".format(sys.argv[0]))
-    x = input("Please, input comma-separated numbers:")
-   
-ls = x.split(',')
-for i in ls:
+def print_numbers():
     try:
-        a=int(i)
-    except ValueError:
-        print("{} - this is not number".format(i))
-    else:
-        if a==254:
-            print("254 was found")
-            break
+        x=sys.argv[1]
+    except IndexError:
+        print("Numbers list wasn't given as an argument to the script {}".format(sys.argv[0]))
+        x = input("Please, input comma-separated numbers:")
+       
+    ls = x.split(',')
+    for i in ls:
+        try:
+            a=int(i)
+        except ValueError:
+            print("{} - this is not number".format(i))
         else:
-            print(a)
+            if a==254:
+                print("254 was found")
+                break
+            else:
+                print(a)
+
+
+print_numbers()
