@@ -17,50 +17,50 @@ import sys
 from pprint import pprint
 import docker
 
-try:
-    url=sys.argv[1]
-except IndexError:
-    url='unix://var/run/docker.sock'
-    print("Connection string wasn't given as an argument to the script {0}. {1} will be used."  .format(sys.argv[0], url))
-
-#client = docker.from_env()
-client_api = docker.APIClient(base_url=url)
-client = docker.DockerClient(base_url=url)
-
-input("Press ENTER to continue.")
-
-
-#1.print a warning message if there are dead or stopped containers with their ID and name.
-print("Task #1") 
-for container in client.containers.list(all=True):
-    if container.status in ['dead', 'stopped', 'exited', 'paused', 'created' ]:
-        print('Warning! name={0}  :  id={1}  :  status={2}'.format(container.name,container.id,container.status))
-
-
-input("Press ENTER to continue.")
-
-#2. containers list, similar to docker ps -a
-print("Task #2")
-print(client.containers.list(all=True))
-
-
-input("Press ENTER to continue.")
-
-#3. image list, similar to docker image ls 
-print("Task #3")
-print(client.images.list())
-
-input("Press ENTER to continue.")
-
-
-#4. container information, like docker inspect 
-for container in client.containers.list(all=True):
-    print('\n\n\nInsperct of {}.\n\n\n'.format(container.name))
-    pprint(client_api.inspect_container(container.id))
+def docker_con():
+    try:
+        url=sys.argv[1]
+    except IndexError:
+        url='unix://var/run/docker.sock'
+        print("Connection string wasn't given as an argument to the script {0}. {1} will be used."  .format(sys.argv[0], url))
+    
+    #client = docker.from_env()
+    client_api = docker.APIClient(base_url=url)
+    client = docker.DockerClient(base_url=url)
+    
     input("Press ENTER to continue.")
+    
+    
+    #1.print a warning message if there are dead or stopped containers with their ID and name.
+    print("Task #1") 
+    for container in client.containers.list(all=True):
+        if container.status in ['dead', 'stopped', 'exited', 'paused', 'created' ]:
+            print('Warning! name={0}  :  id={1}  :  status={2}'.format(container.name,container.id,container.status))
+    
+    
+    input("Press ENTER to continue.")
+    
+    #2. containers list, similar to docker ps -a
+    print("Task #2")
+    print(client.containers.list(all=True))
+    
+    
+    input("Press ENTER to continue.")
+    
+    #3. image list, similar to docker image ls 
+    print("Task #3")
+    print(client.images.list())
+    
+    input("Press ENTER to continue.")
+    
+    
+    #4. container information, like docker inspect 
+    for container in client.containers.list(all=True):
+        print('\n\n\nInsperct of {}.\n\n\n'.format(container.name))
+        pprint(client_api.inspect_container(container.id))
+        input("Press ENTER to continue.")
+    
+    client.close()
+    client_api.close()
 
-
-
-
-client.close()
-client_api.close()
+docker_con()
