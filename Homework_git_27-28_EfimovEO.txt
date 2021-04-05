@@ -1,0 +1,202 @@
+[admin@andromeda git_hw]$ git config --global user.name "Efimov Evgeney"
+[admin@andromeda git_hw]$ git config --global user.email "efimov.evgeney@gmail.com"
+
+
+
+1.
+-------------------------------------------------------
+  1. Create local repository named lection_git_hw
+-------------------------------------------------------
+[admin@andromeda git_hw]$ git init lection_git_hw
+
+
+-------------------------------------------------------
+  2. Create file "homework" in this repo and commit it in master branch
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ touch homework
+[admin@andromeda lection_git_hw]$ git add homework 
+[admin@andromeda lection_git_hw]$ git commit homework -m "2. Create file "homework" in this repo and commit it in master branch"
+
+
+
+-------------------------------------------------------
+  3. Create branch "hw_git" and insert anything in the file and commit these changes to this branch
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git branch hw_git
+[admin@andromeda lection_git_hw]$ git checkout hw_git
+[admin@andromeda lection_git_hw]$ echo anything > ./homework
+[admin@andromeda lection_git_hw]$ git commit homework -m "p.3 commit file homework to brach hw_git with some insert in"
+
+
+
+
+-------------------------------------------------------
+  4. Switch back to master branch and add anything else to the empty file "homework" there too
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git checkout master
+Switched to branch 'master'
+[admin@andromeda lection_git_hw]$ cat ./homework 
+[admin@andromeda lection_git_hw]$ echo "insert anything in the file" > ./homework
+[admin@andromeda lection_git_hw]$ git commit homework -m "commit changes in file homework by p.4 of hw"
+
+
+-------------------------------------------------------
+  5. Merge branch "hw_git" to "master", keep only changes from "hw_git" branch
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git merge hw_git
+Auto-merging homework
+CONFLICT (content): Merge conflict in homework
+Automatic merge failed; fix conflicts and then commit the result.
+
+[admin@andromeda lection_git_hw]$ git add ./homework
+[admin@andromeda lection_git_hw]$ git commit -a
+[master 4b643a8] Merge branch 'hw_git'
+[admin@andromeda lection_git_hw]$ git status
+# On branch master
+nothing to commit, working directory clean
+[admin@andromeda lection_git_hw]$ cat ./homework 
+anything
+
+-------------------------------------------------------
+  6. Switch to "hw_git" branch again and create new file "temp_file" and commit it
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git checkout hw_git
+Switched to branch 'hw_git'
+[admin@andromeda lection_git_hw]$ touch temp_file
+[admin@andromeda lection_git_hw]$ git add temp_file && git commit ./temp_file -m "p.6 of hw" 
+[hw_git be2fb86] p.6 of hw
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 temp_file
+
+-------------------------------------------------------
+  7. Revert to the first commit in "hw_git" branch
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git log
+commit 3a8ba16ea3d2428a4d3d6e71753c0e784ed47a69
+Author: Efimov Evgeney <efimov.evgeney@gmail.com>
+Date:   Fri Mar 26 16:27:02 2021 -0400
+
+    p.6 of hw
+
+commit 9ebfb19827577771b275bc1bbd3983311207ea20
+Author: Efimov Evgeney <efimov.evgeney@gmail.com>
+Date:   Fri Mar 26 16:23:46 2021 -0400
+
+    p.3 commit file homework to brach hw_git with some insert in
+
+commit 8235016394157ee5589e2307e0b1f93b22c01d7e
+Author: Efimov Evgeney <efimov.evgeney@gmail.com>
+Date:   Fri Mar 26 16:22:34 2021 -0400
+
+    2. Create file homework in this repo and commit it in master branch
+[admin@andromeda lection_git_hw]$ git revert 9ebfb19827577771b275bc1bbd3983311207ea20
+[master 1370f93] Revert "p.3 commit file homework to brach hw_git with some insert in"
+ 1 file changed, 1 deletion(-)
+[admin@andromeda lection_git_hw]$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2.
+-------------------------------------------------------
+  1. Register in Github (if you are not registered yet) and create empty repository "lection_git_hw"
+-------------------------------------------------------
+username: EfimovEO
+
+-------------------------------------------------------
+  2. Set remote from your local repo from task 1 to this new repo (https://help.github.com/articles/changing-a-remote-s-url/)
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git remote add origin https://github.com/EfimovEO/lection_git_hw.git
+
+-------------------------------------------------------
+  3. Push all branches to the remote repo
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git push origin --all
+Username for 'https://github.com': EfimovEO
+Password for 'https://EfimovEO@github.com': 
+Counting objects: 13, done.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (13/13), 1.31 KiB | 0 bytes/s, done.
+Total 13 (delta 3), reused 0 (delta 0)
+remote: Resolving deltas: 100% (3/3), done.
+To https://github.com/EfimovEO/lection_git_hw.git
+ * [new branch]      hw_git -> hw_git
+ * [new branch]      master -> master
+[admin@andromeda lection_git_hw]$
+
+-------------------------------------------------------
+  4. Change everything in file "homework" in branch "hw_git" to one line "Hello Github", commit it and push
+-------------------------------------------------------
+[admin@andromeda lection_git_hw]$ git status
+# On branch hw_git
+nothing to commit, working directory clean
+[admin@andromeda lection_git_hw]$ echo "Hello Github" > ./homework 
+[admin@andromeda lection_git_hw]$ cat ./homework 
+Hello Github
+[admin@andromeda lection_git_hw]$ git status 
+# On branch hw_git
+# Changes not staged for commit:
+#   (use "git add <file>..." to update what will be committed)
+#   (use "git checkout -- <file>..." to discard changes in working directory)
+#
+#	modified:   homework
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+[admin@andromeda lection_git_hw]$ git commit homework -m "4. Change everything in file "homework" in branch "hw_git" to one line "Hello Github", commit it and push"
+error: pathspec 'Github, commit it and push' did not match any file(s) known to git.
+[admin@andromeda lection_git_hw]$ git commit homework -m "4. Change everything in file homework in branch hw_git to one line Hello Github, commit it and push"
+[hw_git 482785b] 4. Change everything in file homework in branch hw_git to one line Hello Github, commit it and push
+ 1 file changed, 1 insertion(+)
+
+[admin@andromeda lection_git_hw]$ git push origin hw_git
+
+
+-------------------------------------------------------
+  5. Create Pull Request from branch "hw_git" to the master branch and assign me as reviewer to this merge request (SagurovA93)
+-------------------------------------------------------
+
+
+
+
+
+
+
+
+
+3.
+-------------------------------------------------------
+  1. Set up Gitlab CE in docker container (image "gitlab/gitlab-ce:latest", ports to publish – 80 and 22, you can choose any ports to be published on your machine)
+-------------------------------------------------------
+[admin@andromeda ~]$ docker run -p 8080:80 -p 2222:22 -it -d --name Gitlab_CE gitlab/gitlab-ce:latest
+ 
+ 2. Log in as root (it will offer you to change password in gitlab webui on your first visit)
+  Make screenshots on each step below, pack them as tgz archive and attach it to your homework
+  3. Create group "hw_git"
+  4. Create two users: maintainer and developer
+  5. Add these users to the group and set them proper permissions in the group (maintainer – maintainer, developer – developer)
+  6. Create new project with any name
+  7. Create all branches for GitFlow in this project (you can create one feature and one release branch and don't create hotfix branch)
+  8. Protect master branch to allow only maintainers to merge into it, and restrict all to push there
+  9. Protect release branches by wildcard (release-* for example) and allow only maintainers to merge into it
+  10. Protect develop branch to allow everyone to create Merge Request into it
+  11. Allow anyone do anything in branches like "feature-*"
+
+EXTRA (*)
+  1. Add TravisCI to your Github repo from the first task
+  2. Create .travis.yml, it should do only echo "Hello World"
+  3. Trigger your CI on each commit to any branch
+  4. Test it, make screenshot from TravisCI webui with success run
