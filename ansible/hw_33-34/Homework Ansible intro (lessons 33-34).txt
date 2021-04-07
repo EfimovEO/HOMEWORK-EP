@@ -1,0 +1,148 @@
+﻿Need to have >=3 VMs
+VM1(andromeda):192.168.56.1
+VM2(headnode):192.168.56.10
+VM3(worker):192.168.56.20
+
+
+---------------------------------------------------------
+    1. On one of them install Ansible and create a user.
+---------------------------------------------------------
+[admin@andromeda ~]$ sudo yum install epel-release
+[admin@andromeda ~]$ sudo yum install ansible
+
+[admin@andromeda ~]$ sudo useradd ansible
+[admin@andromeda ~]$ sudo passwd ansible 
+
+
+---------------------------------------------------------
+    2. Using ansible ad-hoc create the same user on the rest of machines.
+    3. Setup SSH keys and sudo for that user.
+---------------------------------------------------------
+публичные ключи пользователя root были скопированы на VM2 и VM3
+
+
+[admin@andromeda ansible]$ cat ./hosts 
+all:
+ hosts:
+  192.168.56.10:
+  192.168.56.20:
+
+
+
+[admin@andromeda ansible]$ ansible -i hosts -b -K -k -u root -m user -a "name=ansible groups=wheel append=yes" all
+SSH password: 
+BECOME password[defaults to SSH password]: 
+192.168.56.10 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    }, 
+    "append": true, 
+    "changed": true, 
+    "comment": "", 
+    "group": 1004, 
+    "groups": "wheel", 
+    "home": "/home/ansible", 
+    "move_home": false, 
+    "name": "ansible", 
+    "shell": "/bin/bash", 
+    "state": "present", 
+    "uid": 1004
+}
+192.168.56.20 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    }, 
+    "append": true, 
+    "changed": true, 
+    "comment": "", 
+    "group": 1004, 
+    "groups": "wheel", 
+    "home": "/home/ansible", 
+    "move_home": false, 
+    "name": "ansible", 
+    "shell": "/bin/bash", 
+    "state": "present", 
+    "uid": 1004
+
+
+[admin@andromeda ansible]$ su ansible -c ssh-keygen
+Пароль: 
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ansible/.ssh/id_rsa): 
+Created directory '/home/ansible/.ssh'.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/ansible/.ssh/id_rsa.
+Your public key has been saved in /home/ansible/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:58H+lvKM5J3QVU8OVbp8zlMA7/i0Qd7NQFXKZJGw/DA ansible@andromeda
+The key's randomart image is:
++---[RSA 2048]----+
+|            o.=+B|
+|           . O.+ |
+|            E X o|
+|         .   X @o|
+|        S + . X O|
+|         + o + *.|
+|          = ..o.o|
+|         o.*o.  .|
+|          o+*    |
++----[SHA256]-----+
+
+
+[admin@andromeda ansible]$ sudo cat /home/ansible/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKURM3xoViUogjit+BN3YmWVZHhK2Q5k3fEodsN6XHvlDGp0NGcNL6KS9EBb34/q6pjERSxK6gK8BAjgerZPdmbMmTSId06HJkHF1l3Ck5SzOJOOjlmAow05nR7RpMUeJOLP1UBeGS/OO1IVxaNjyizH6UJSEAWnKtaoRETZ2U7L5riiWRVgJfDAFM/TsW0G9t6HTUbfE77W6J0NkopJU2J9Ac9JnVt2XYAHwT0mNcGiHNEKXb+qxORqB7mEvtp2ICpT+TcBsnmXEdkkFv35QnlHDegUOXgPPe5m6PJOg2+oupUIl6p4CyV7dQqfu8azxKpCVVUtuDtcvUiWcYE8OJ ansible@andromeda
+
+
+
+
+[admin@andromeda ansible]$ ansible -i hosts -b -K -k -u root -m authorized_key -a "user=ansible key='ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKURM3xoViUogjit+BN3YmWVZHhK2Q5k3fEodsN6XHvlDGp0NGcNL6KS9EBb34/q6pjERSxK6gK8BAjgerZPdmbMmTSId06HJkHF1l3Ck5SzOJOOjlmAow05nR7RpMUeJOLP1UBeGS/OO1IVxaNjyizH6UJSEAWnKtaoRETZ2U7L5riiWRVgJfDAFM/TsW0G9t6HTUbfE77W6J0NkopJU2J9Ac9JnVt2XYAHwT0mNcGiHNEKXb+qxORqB7mEvtp2ICpT+TcBsnmXEdkkFv35QnlHDegUOXgPPe5m6PJOg2+oupUIl6p4CyV7dQqfu8azxKpCVVUtuDtcvUiWcYE8OJ ansible@andromeda' manage_dir=yes" all
+SSH password: 
+BECOME password[defaults to SSH password]: 
+192.168.56.20 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    }, 
+    "changed": true, 
+    "comment": null, 
+    "exclusive": false, 
+    "follow": false, 
+    "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKURM3xoViUogjit+BN3YmWVZHhK2Q5k3fEodsN6XHvlDGp0NGcNL6KS9EBb34/q6pjERSxK6gK8BAjgerZPdmbMmTSId06HJkHF1l3Ck5SzOJOOjlmAow05nR7RpMUeJOLP1UBeGS/OO1IVxaNjyizH6UJSEAWnKtaoRETZ2U7L5riiWRVgJfDAFM/TsW0G9t6HTUbfE77W6J0NkopJU2J9Ac9JnVt2XYAHwT0mNcGiHNEKXb+qxORqB7mEvtp2ICpT+TcBsnmXEdkkFv35QnlHDegUOXgPPe5m6PJOg2+oupUIl6p4CyV7dQqfu8azxKpCVVUtuDtcvUiWcYE8OJ ansible@andromeda", 
+    "key_options": null, 
+    "keyfile": "/home/ansible/.ssh/authorized_keys", 
+    "manage_dir": true, 
+    "path": null, 
+    "state": "present", 
+    "user": "ansible", 
+    "validate_certs": true
+}
+192.168.56.10 | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    }, 
+    "changed": true, 
+    "comment": null, 
+    "exclusive": false, 
+    "follow": false, 
+    "key": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDKURM3xoViUogjit+BN3YmWVZHhK2Q5k3fEodsN6XHvlDGp0NGcNL6KS9EBb34/q6pjERSxK6gK8BAjgerZPdmbMmTSId06HJkHF1l3Ck5SzOJOOjlmAow05nR7RpMUeJOLP1UBeGS/OO1IVxaNjyizH6UJSEAWnKtaoRETZ2U7L5riiWRVgJfDAFM/TsW0G9t6HTUbfE77W6J0NkopJU2J9Ac9JnVt2XYAHwT0mNcGiHNEKXb+qxORqB7mEvtp2ICpT+TcBsnmXEdkkFv35QnlHDegUOXgPPe5m6PJOg2+oupUIl6p4CyV7dQqfu8azxKpCVVUtuDtcvUiWcYE8OJ ansible@andromeda", 
+    "key_options": null, 
+    "keyfile": "/home/ansible/.ssh/authorized_keys", 
+    "manage_dir": true, 
+    "path": null, 
+    "state": "present", 
+    "user": "ansible", 
+    "validate_certs": true
+}
+
+
+
+
+
+---------------------------------------------------------
+    4. write a playbook which:
+---------------------------------------------------------
+    • updates all packages on the systems
+    • installs NTP, Nginx and MySQL
+    • for NTP replaces default config with your own (you can find NTP server configs on the internet)
+    • for MySQL creates user and database (using corresponding module)
+    • * for Nginx creates directory /web and places there files for some test site (you can find them on the internet and you may want to fix nginx.conf appropriately)
