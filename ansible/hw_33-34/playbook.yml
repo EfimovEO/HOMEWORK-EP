@@ -1,0 +1,94 @@
+---
+- name: hw_33-34
+  hosts: all
+  become: yes
+  tasks:
+  - name: update
+    yum:
+      name: '*'
+      state: latest
+  - name: Add epel-release repo
+    yum:
+      name: epel-release
+      state: present
+  
+  - name: nginx ntp python3 MySQL-python
+    yum:
+      name: nginx, ntp, python3, MySQL-python
+      state: present
+
+  - name: for NTP replaces default config with your own (you can find NTP server configs on the internet) 
+    copy:
+      src: ntp.conf
+      dest: /etc/ntp.conf
+
+  - name: Install MySQL
+    yum: 
+      name: mariadb-server
+      state: present
+
+  - name: Start MySQL
+    service:
+      name: mariadb 
+      state: started
+
+  - name: for MySQL create database
+    mysql_db:
+      login_unix_socket: /var/lib/mysql/mysql.sock
+      name: db 
+      state: present
+  - name: for MySQL create user
+    mysql_user:
+      login_unix_socket: /var/lib/mysql/mysql.sock 
+      name: user 
+      password: 12345
+      priv: '*.*:ALL'
+      state: present
+
+  - name: creates directory /web
+    file:
+      path: /web
+      state: directory
+      owner: nginx
+      group: nginx
+      mode: 0775
+  
+  - name: place there files for some test site
+    copy:
+      src: index.html
+      dest: /web/index.html
+      owner: nginx
+      group: nginx
+      mode: 0644
+
+# it will be better to create a template nginx.conf file and copy it to target machines but I ran out of time
+  - name: change nginx config
+    lineinfile:
+     path: /etc/nginx/nginx.conf
+     regexp: '^        root         /usr/share/nginx/html;'
+     line: '        root         /web;'
+
+#ansible-galaxy collection install ansible.posix
+  - name: open port 80
+    firewalld:
+      zone: public
+      port: 80/tcp
+      permanent: true
+      state: enabled
+    notify:
+      - Restart firewalld
+
+  - name: disable selinux
+    selinux:
+      state: disabled
+
+  - name: Start nginx
+    service:
+      name: nginx
+      state: started
+
+  handlers:
+    - name: Restart firewalld
+      service:
+        name: firewalld
+        state: reloaded
