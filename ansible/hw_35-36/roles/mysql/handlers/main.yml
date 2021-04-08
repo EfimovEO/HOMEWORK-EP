@@ -1,0 +1,7 @@
+---
+# handlers file for mysql
+  - name: Start and Enable MySQL
+    service:
+      name: mariadb
+      state: started
+      enabled: yes

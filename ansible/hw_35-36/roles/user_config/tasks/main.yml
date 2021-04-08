@@ -1,0 +1,13 @@
+---
+# tasks file for user_config
+    - name: create user ansible
+      user:
+        name=ansible
+        groups=wheel
+        append=yes
+
+    - name: copy public key
+      authorized_key:
+        user=ansible
+        key={{ ssh_pub_key }}
+        manage_dir=yes
