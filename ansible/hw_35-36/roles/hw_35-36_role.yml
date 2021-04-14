@@ -2,16 +2,13 @@
   - name: hw_35-36
     hosts: all
     roles:
+
       - role: user_config
         become: yes
         become_method: sudo
         become_user: root
-
       - role: ntp
-        become: yes
 
       - role: mysql
-        become: yes
 
       - role: nginx
-        become: yes

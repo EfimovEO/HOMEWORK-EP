@@ -1,16 +1,19 @@
 ---
 # tasks file for mysql
   - name: install python3 MySQL-python
+    become: yes
     yum:
       name: python3, MySQL-python
       state: present
 
   - name: Install MySQL
+    become: yes
     yum:
       name: mariadb-server
       state: present
 
   - name: Start and Enable MySQL
+    become: yes
     service:
       name: mariadb
       state: started

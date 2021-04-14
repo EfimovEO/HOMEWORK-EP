@@ -2,17 +2,20 @@
 # tasks file for nginx
 
   - name: install nginx
+    become: yes
     yum:
       name: nginx
       state: present
 
   - name: Start nginx
+    become: yes
     service:
       name: nginx
       state: started
       enabled: true
 
   - name: creates directory /web
+    become: yes
     file:
       path: /web
       state: directory
@@ -21,6 +24,7 @@
       mode: 0775
 
   - name: place there files for some test site
+    become: yes
     copy:
       src: index.html
       dest: /web/index.html
@@ -29,6 +33,7 @@
       mode: 0644
 
   - name: change nginx config
+    become: yes
     template:
       src: nginx.j2.conf
       dest: /etc/nginx/nginx.conf
@@ -42,6 +47,7 @@
                               
 #ansible-galaxy collection install ansible.posix
   - name: open port 80
+    become: yes
     firewalld:
       zone: public
       port: 80/tcp
@@ -51,6 +57,7 @@
       - Restart firewalld
 
   - name: disable selinux
+    become: yes
     selinux:
       state: disabled
 

@@ -2,11 +2,13 @@
 # tasks file for ntp
 
   - name: install ntp
+    become: yes
     yum:
       name: ntp
       state: present
 
   - name: for NTP replaces default config with your own
+    become: yes
     copy:
       src: ntp.conf
       dest: /etc/ntp.conf
