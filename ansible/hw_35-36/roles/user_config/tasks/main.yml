@@ -10,9 +10,7 @@
         append=yes
 
     - name: copy public key
-      become: yes
-      become_method: sudo
-      become_user: root
+      become_user: ansible
       authorized_key:
         user=ansible
         key={{ ssh_pub_key }}
