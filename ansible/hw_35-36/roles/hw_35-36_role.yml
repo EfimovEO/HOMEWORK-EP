@@ -4,9 +4,7 @@
     roles:
 
       - role: user_config
-        become: yes
-        become_method: sudo
-        become_user: root
+
       - role: ntp
 
       - role: mysql
