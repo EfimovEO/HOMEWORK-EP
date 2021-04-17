@@ -1,0 +1,12 @@
+---
+  - name: hw_35-36
+    hosts: all
+    roles:
+
+      - role: user_config
+
+      - role: ntp
+
+      - role: mysql
+
+      - role: nginx

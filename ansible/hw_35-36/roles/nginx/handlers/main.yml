@@ -1,0 +1,12 @@
+---
+# handlers file for nginx
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted
+
+  - name: Restart firewalld
+    service:
+      name: firewalld
+      state: reloaded
+

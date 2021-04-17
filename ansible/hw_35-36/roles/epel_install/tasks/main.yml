@@ -1,0 +1,15 @@
+---
+# tasks file for epel_install
+
+  - name: update
+    become: yes
+    yum:
+      name: '*'
+      state: latest
+
+  - name: Add epel-release repo
+    become: yes
+    yum:
+      name: epel-release
+      state: present
+
